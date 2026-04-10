@@ -2,21 +2,13 @@
 import Formulario from "./components/Formulario";
 import Filtros from "./components/Filtros";
 import ParticipanteCard from "./components/ParticipanteCard";
+import {
+  filtrosIniciales,
+  type FiltrosState,
+} from "./components/filtros";
 import { Participante, type DatosParticipante } from "./models/Participante";
 
 const STORAGE_KEY = "participantes";
-
-type FiltrosState = {
-  busqueda: string;
-  modalidad: string;
-  nivel: string;
-};
-
-const filtrosIniciales: FiltrosState = {
-  busqueda: "",
-  modalidad: "Todas",
-  nivel: "Todos",
-};
 
 const participantesIniciales: Participante[] = [
   new Participante(

@@ -1,4 +1,6 @@
-﻿function Filtros({
+﻿import type { FiltrosState } from "./filtros";
+
+function Filtros({
   busqueda,
   modalidad,
   nivel,
@@ -8,11 +10,7 @@
   busqueda: string;
   modalidad: string;
   nivel: string;
-  onCambiarFiltros: (filtros: {
-    busqueda: string;
-    modalidad: string;
-    nivel: string;
-  }) => void;
+  onCambiarFiltros: (filtros: FiltrosState) => void;
   onLimpiar: () => void;
 }) {
   const manejarCambio = (
@@ -25,7 +23,7 @@
       modalidad,
       nivel,
       [name]: value,
-    });
+    } as FiltrosState);
   };
 
   return (
