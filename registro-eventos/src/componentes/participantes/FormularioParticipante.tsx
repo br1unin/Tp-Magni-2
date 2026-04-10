@@ -1,5 +1,9 @@
-import { useState } from "react";
-import type { Participante, Modalidad, Nivel } from "../../tipos/Participante";
+﻿import { useState, type ChangeEvent, type FormEvent } from "react";
+import {
+  Participante,
+  type Modalidad,
+  type Nivel,
+} from "../../tipos/Participante";
 
 type Props = {
   alAgregarParticipante: (participante: Participante) => void;
@@ -31,19 +35,19 @@ function FormularioParticipante({ alAgregarParticipante }: Props) {
   const [formulario, setFormulario] = useState<DatosFormulario>(datosIniciales);
 
   const tecnologiasDisponibles = ["React", "Angular", "Vue", "Node", "Python", "Java"];
-  const paisesDisponibles = ["Argentina", "Chile", "Uruguay", "México", "España"];
-  const modalidadesDisponibles: Modalidad[] = ["Presencial", "Virtual", "Híbrido"];
+  const paisesDisponibles = ["Argentina", "Chile", "Uruguay", "Mexico", "Espana"];
+  const modalidadesDisponibles: Modalidad[] = ["Presencial", "Virtual", "Hibrido"];
   const nivelesDisponibles: Nivel[] = ["Principiante", "Intermedio", "Avanzado"];
 
   const manejarCambioInput = (
-    evento: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>      //recibe un evento que cambio algo,sea input o select
+    evento: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    const { name, value, type } = evento.target;                //elemento que cambio
+    const { name, value, type } = evento.target;
 
     if (type === "checkbox") {
       const checked = (evento.target as HTMLInputElement).checked;
 
-      setFormulario((prev) => ({     //prev mantiene el resto de las propiedades iguales para que no se pierdan
+      setFormulario((prev) => ({
         ...prev,
         [name]: checked,
       }));
@@ -51,7 +55,7 @@ function FormularioParticipante({ alAgregarParticipante }: Props) {
       return;
     }
 
-    setFormulario((prev) => ({           //se actualiza el campo de name, si name = "nombre" actualiza el nombre
+    setFormulario((prev) => ({
       ...prev,
       [name]: name === "edad" ? Number(value) : value,
     }));
@@ -75,20 +79,20 @@ function FormularioParticipante({ alAgregarParticipante }: Props) {
     });
   };
 
-  const manejarEnvio = (evento: React.FormEvent<HTMLFormElement>) => {
-    evento.preventDefault();      //evita que el formulario recargue la pagina
+  const manejarEnvio = (evento: FormEvent<HTMLFormElement>) => {
+    evento.preventDefault();
 
-    const nuevoParticipante: Participante = {
-      id: Date.now(),
-      nombre: formulario.nombre,
-      email: formulario.email,
-      edad: formulario.edad,
-      pais: formulario.pais,
-      modalidad: formulario.modalidad,
-      tecnologias: formulario.tecnologias,
-      nivel: formulario.nivel,
-      aceptaTerminos: formulario.aceptaTerminos,
-    };
+    const nuevoParticipante = new Participante(
+      Date.now(),
+      formulario.nombre,
+      formulario.email,
+      formulario.edad,
+      formulario.pais,
+      formulario.modalidad,
+      formulario.tecnologias,
+      formulario.nivel,
+      formulario.aceptaTerminos,
+    );
 
     alAgregarParticipante(nuevoParticipante);
     setFormulario(datosIniciales);
@@ -137,14 +141,14 @@ function FormularioParticipante({ alAgregarParticipante }: Props) {
       </div>
 
       <div>
-        <label className="block mb-1 font-medium">País</label>
+        <label className="block mb-1 font-medium">Pais</label>
         <select
           name="pais"
           value={formulario.pais}
           onChange={manejarCambioInput}
           className="w-full border rounded px-3 py-2"
         >
-          {paisesDisponibles.map((pais) => (      
+          {paisesDisponibles.map((pais) => (
             <option key={pais} value={pais}>
               {pais}
             </option>
@@ -171,7 +175,7 @@ function FormularioParticipante({ alAgregarParticipante }: Props) {
       </div>
 
       <div className="md:col-span-2">
-        <p className="mb-2 font-medium">Tecnologías</p>
+        <p className="mb-2 font-medium">Tecnologias</p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
           {tecnologiasDisponibles.map((tecnologia) => (
             <label key={tecnologia} className="flex items-center gap-2">
@@ -211,7 +215,7 @@ function FormularioParticipante({ alAgregarParticipante }: Props) {
             onChange={manejarCambioInput}
             required
           />
-          Acepto los términos y condiciones
+          Acepto los terminos y condiciones
         </label>
       </div>
 
