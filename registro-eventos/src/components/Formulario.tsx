@@ -3,10 +3,10 @@ import {
   Participante,
   type Modalidad,
   type Nivel,
-} from "../../tipos/Participante";
+} from "../models/Participante";
 
 type Props = {
-  alAgregarParticipante: (participante: Participante) => void;
+  onAgregar: (participante: Participante) => void;
 };
 
 type DatosFormulario = {
@@ -31,7 +31,7 @@ const datosIniciales: DatosFormulario = {
   aceptaTerminos: false,
 };
 
-function FormularioParticipante({ alAgregarParticipante }: Props) {
+function Formulario({ onAgregar }: Props) {
   const [formulario, setFormulario] = useState<DatosFormulario>(datosIniciales);
 
   const tecnologiasDisponibles = ["React", "Angular", "Vue", "Node", "Python", "Java"];
@@ -94,7 +94,7 @@ function FormularioParticipante({ alAgregarParticipante }: Props) {
       formulario.aceptaTerminos,
     );
 
-    alAgregarParticipante(nuevoParticipante);
+    onAgregar(nuevoParticipante);
     setFormulario(datosIniciales);
   };
 
@@ -231,4 +231,4 @@ function FormularioParticipante({ alAgregarParticipante }: Props) {
   );
 }
 
-export default FormularioParticipante;
+export default Formulario;

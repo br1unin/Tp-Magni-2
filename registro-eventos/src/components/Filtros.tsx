@@ -1,26 +1,31 @@
-﻿import type { ChangeEvent } from "react";
-import type { Filtros } from "./filtros";
-
-type FiltrosParticipantesProps = {
-  filtros: Filtros;
-  alCambiarFiltros: (filtros: Filtros) => void;
-  alLimpiarFiltros: () => void;
-};
-
-function FiltrosParticipantes({
-  filtros,
-  alCambiarFiltros,
-  alLimpiarFiltros,
-}: FiltrosParticipantesProps) {
+﻿function Filtros({
+  busqueda,
+  modalidad,
+  nivel,
+  onCambiarFiltros,
+  onLimpiar,
+}: {
+  busqueda: string;
+  modalidad: string;
+  nivel: string;
+  onCambiarFiltros: (filtros: {
+    busqueda: string;
+    modalidad: string;
+    nivel: string;
+  }) => void;
+  onLimpiar: () => void;
+}) {
   const manejarCambio = (
-    evento: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    evento: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = evento.target;
 
-    alCambiarFiltros({
-      ...filtros,
+    onCambiarFiltros({
+      busqueda,
+      modalidad,
+      nivel,
       [name]: value,
-    } as Filtros);
+    });
   };
 
   return (
@@ -31,7 +36,7 @@ function FiltrosParticipantes({
           <input
             type="text"
             name="busqueda"
-            value={filtros.busqueda}
+            value={busqueda}
             onChange={manejarCambio}
             placeholder="Buscar por nombre"
             className="w-full border rounded px-3 py-2"
@@ -42,7 +47,7 @@ function FiltrosParticipantes({
           <label className="block mb-1 font-medium">Modalidad</label>
           <select
             name="modalidad"
-            value={filtros.modalidad}
+            value={modalidad}
             onChange={manejarCambio}
             className="w-full border rounded px-3 py-2"
           >
@@ -57,7 +62,7 @@ function FiltrosParticipantes({
           <label className="block mb-1 font-medium">Nivel</label>
           <select
             name="nivel"
-            value={filtros.nivel}
+            value={nivel}
             onChange={manejarCambio}
             className="w-full border rounded px-3 py-2"
           >
@@ -72,7 +77,7 @@ function FiltrosParticipantes({
       <div className="flex justify-end">
         <button
           type="button"
-          onClick={alLimpiarFiltros}
+          onClick={onLimpiar}
           className="bg-slate-200 text-slate-800 px-4 py-2 rounded hover:bg-slate-300 transition"
         >
           Limpiar filtros
@@ -82,4 +87,4 @@ function FiltrosParticipantes({
   );
 }
 
-export default FiltrosParticipantes;
+export default Filtros;

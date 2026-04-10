@@ -1,24 +1,62 @@
 ﻿import { useEffect, useMemo, useState } from "react";
-import { participantesIniciales } from "./datos/ParticipantesIniciales";
-import FormularioParticipante from "./componentes/participantes/FormularioParticipante";
-import { ListaParticipantes } from "./componentes/participantes/ListaParticipantes";
-import ContadorParticipantes from "./componentes/participantes/ContadorParticipantes";
-import FiltrosParticipantes from "./componentes/participantes/FiltrosParticipantes";
-import AccionesParticipantes from "./componentes/participantes/AccionesParticipantes";
-import {
-  filtrosIniciales,
-  type Filtros,
-} from "./componentes/participantes/filtros";
-import {
-  Participante,
-  type DatosParticipante,
-} from "./tipos/Participante";
+import Formulario from "./components/Formulario";
+import Filtros from "./components/Filtros";
+import ParticipanteCard from "./components/ParticipanteCard";
+import { Participante, type DatosParticipante } from "./models/Participante";
 
 const STORAGE_KEY = "participantes";
 
+type FiltrosState = {
+  busqueda: string;
+  modalidad: string;
+  nivel: string;
+};
+
+const filtrosIniciales: FiltrosState = {
+  busqueda: "",
+  modalidad: "Todas",
+  nivel: "Todos",
+};
+
+const participantesIniciales: Participante[] = [
+  new Participante(
+    1,
+    "Juan Perez",
+    "juan@mail.com",
+    25,
+    "Argentina",
+    "Presencial",
+    ["React", "Node"],
+    "Intermedio",
+    true,
+  ),
+  new Participante(
+    2,
+    "Ana Gomez",
+    "ana@mail.com",
+    30,
+    "Chile",
+    "Virtual",
+    ["Angular", "Java"],
+    "Avanzado",
+    true,
+  ),
+  new Participante(
+    3,
+    "Luis Martinez",
+    "luis@mail.com",
+    22,
+    "Mexico",
+    "Hibrido",
+    ["Vue", "Python"],
+    "Principiante",
+    true,
+  ),
+];
+
 function App() {
   const [participantes, setParticipantes] = useState<Participante[]>([]);
-  const [filtros, setFiltros] = useState<Filtros>(filtrosIniciales);
+  const [filtros, setFiltros] = useState<FiltrosState>(filtrosIniciales);
   const [estaInicializado, setEstaInicializado] = useState(false);
 
   useEffect(() => {
@@ -93,25 +131,49 @@ function App() {
         Registro de Participantes
       </h1>
 
-      <ContadorParticipantes
-        total={participantes.length}
-        visibles={participantesFiltrados.length}
+      <div className="bg-blue-50 border border-blue-200 rounded p-4 text-lg font-medium">
+        Mostrando {participantesFiltrados.length} de {participantes.length} participantes
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={resetearDatos}
+          className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition"
+        >
+          Resetear datos
+        </button>
+      </div>
+
+      <Formulario onAgregar={agregarParticipante} />
+
+      <Filtros
+        busqueda={filtros.busqueda}
+        modalidad={filtros.modalidad}
+        nivel={filtros.nivel}
+        onCambiarFiltros={setFiltros}
+        onLimpiar={limpiarFiltros}
       />
 
-      <AccionesParticipantes onResetearDatos={resetearDatos} />
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Lista de participantes</h2>
 
-      <FormularioParticipante alAgregarParticipante={agregarParticipante} />
-
-      <FiltrosParticipantes
-        filtros={filtros}
-        alCambiarFiltros={setFiltros}
-        alLimpiarFiltros={limpiarFiltros}
-      />
-
-      <ListaParticipantes
-        participantes={participantesFiltrados}
-        alEliminarParticipante={eliminarParticipante}
-      />
+        {participantesFiltrados.length === 0 ? (
+          <div className="bg-white shadow rounded p-6 text-center text-slate-600">
+            No hay participantes
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {participantesFiltrados.map((participante) => (
+              <ParticipanteCard
+                key={participante.id}
+                participante={participante}
+                onEliminar={eliminarParticipante}
+              />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
